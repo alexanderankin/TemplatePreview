@@ -1,0 +1,129 @@
+{{> navbar }}
+
+<div class="site-container">
+  <h1>{{title}}</h1>
+  <p></p>
+  <h2>Edit Template #{{ template.id }}</h2>
+  <p><a href="/in/templates">Back to templates</a>.</p>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Settings</h3>
+        <form method="post">
+          <div class="form-group">
+            <label for="template-name-field">Name</label>
+            <input type="text" class="form-control" id="template-name-field" name="template-name-field" value="{{ template.tname }}">
+          </div>
+          {{!-- <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          </div> --}}
+
+          <div class="form-group">
+            <label for="template-replace-field">Upload New Template (WIP)</label>
+            <input type="file" id="template-replace-field" name="template-replace-field">
+            <p class="help-block">Example block-level help text here.</p>
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-9">
+        <h3>Edit</h3>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/ace/1.3.1/ace.js"></script>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3>Edit Template</h3>
+          </div>
+          <div class="panel-body">
+            <button id="template-editor-submit" type="button" class="btn btn-success">
+              <span class="glyphicon glyphicon-send"></span> Submit
+            </button>
+            <button id="template-editor-refresh" type="button" class="btn btn-danger">
+              <span class="glyphicon glyphicon-refresh"></span> Refresh
+            </button>
+
+            <div id="submit-status-success" class="alert alert-success submit-status submit-status-out" role="alert">Successfully Updated!</div>
+            <div id="submit-status-failure" class="alert alert-danger submit-status submit-status-out" role="alert">There was an error: Changes not saved.</div>
+            <style>
+              .submit-status.submit-status-out {
+                opacity: 0 !important;
+              }
+              .submit-status {
+                display: inline-block;
+                margin: 0 0 0 10px;
+                padding: 8px 12px;
+                opacity: 1;
+                transition: .3s;
+              }
+            </style>
+            <script>
+              function displayStatus(success) {
+                var alert = $('#submit-status-' + (success ? 'success' : 'failure'));
+                alert.removeClass('submit-status-out');
+                setTimeout(function() { alert.addClass('submit-status-out'); }, 1500);
+              }
+            </script>
+
+            <div id="template-editor" style="margin: 10px 0; height: 400px;">{{ template.content }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <h3>Files</h3>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(function () {
+      var editor = ace.edit("template-editor");
+      editor.setTheme("ace/theme/monokai");
+      editor.session.setMode("ace/mode/html");
+
+      var refresh = document.getElementById('template-editor-refresh');
+      refresh.addEventListener('click', function (event) {
+        $.ajax({
+          method: 'get',
+          url: '/in/templates/{{ template.id }}/content',
+          xhrFields: { withCredentials: true },
+          error: function refreshError(jQReq, status, error) {
+            console.log(arguments);
+          },
+          success: function refreshSuccess(data, status, jQReq) {
+            editor.setValue(data);
+          }
+        });
+//         editor.setValue("<!DOCTYPE html>" +
+//         "<html>" +
+//         "<head>" +
+//           "<title></title>" +
+//         "</head>" +
+//         "<body>" +
+// "        " +
+//         "</body>" +
+//         "</html>", -1);
+      });
+
+      var submit = document.getElementById('template-editor-submit');
+      submit.addEventListener('click', function (event) {
+        $.ajax({
+          method: 'post',          
+          url: '/in/templates/{{ template.id }}/content',
+          data: { content: editor.getValue() },
+          xhrFields: { withCredentials: true },
+          error: function refreshError(jQReq, status, error) {
+            console.log(arguments);
+            displayStatus(false);
+          },
+          success: function refreshSuccess(data, status, jQReq) {
+            console.log("success");
+            displayStatus(true);
+          }
+        });
+      });
+    });
+  </script>
+  
+</div>

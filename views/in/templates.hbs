@@ -1,0 +1,47 @@
+{{> navbar }}
+
+<div class="site-container">
+  <h1>{{title}}</h1>
+  <p>Welcome to {{title}}</p>
+  <h2>Templates</h2>
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th></th>
+        <th>id</th>
+        <th>Name</th>
+        <th>Created At</th>
+        <th>Select</th>
+      </tr>
+      <tr>
+        <th>
+          <a class="btn btn-default" href="/in/templates/new" role="button">
+            <span class="glyphicon glyphicon-plus"></span> New
+          </a>
+        </th>
+        <th><p>search goes here</p></th>
+        <th><p>search goes here</p></th>
+        <th><p>search goes here</p></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#templates}}
+        <tr>
+          <td>
+            <a class="btn btn-default" href="templates/{{id}}" role="button">
+              <span class="glyphicon glyphicon-edit"></span> Edit
+            </a>
+          </td>
+          <td>{{ id }}</td>
+          <td>{{ tname }}</td>
+          <td>{{ cat }}</td>
+          <td>
+            <a class="btn btn-info" href="downloads/?templateId={{id}}" role="button">
+              <span class="glyphicon glyphicon-plus"></span> Select
+            </a>
+          </td>
+        </tr>
+      {{/templates}}
+    </tbody>
+  </table>
+</div>

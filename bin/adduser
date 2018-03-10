@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+if (a = process.argv, a.length < 3 || !a[2] || a[2].length === 0) {
+  console.error("adduser: missing operand");
+  console.error("Usage: adduser [USER]");
+
+  process.exit(1);
+}
+
+var path = require('path');
+var dotenv = require('dotenv');
+
+dotenv.config({
+  path: path.join(__dirname, '..', '.env')
+});
+
+var prompt = require('prompt');
+var colors = require('colors/safe');
+
+var db = require('../db');
+
+
+prompt.message = colors.green('adduser');
+// prompt.delimiter = colors.red(":.:");
+
+var schema = {
+  properties: {
+    password: {
+      description: colors.white('Enter a new password'),
+      type: 'string',
+      replace: '*',
+      required: true,
+      message: 'Password cannot be blank',
+      hidden: true
+    }
+  }
+};
+
+prompt.start();
+
+prompt.get(schema, function (err, result) {
+  var uname = a[2];
+  var pword = result.password;
+  db.insertUser(uname, pword, function (err) {
+    if (err) {
+      console.log(colors.red("Something bad happened..."));
+      throw err;
+    }
+
+    console.log("Created a user with username", a[2],
+      "and password of length", result.password.length);
+    process.exit(0);
+  });
+});

@@ -1,0 +1,23 @@
+templates
+    new (form, upload) + list
+  mine
+  shared
+
+download
+  section for making
+  section for printing / preview
+
+login / logout
+
+-------------------
+template
+  id, name, desc, shared(bool), content, creator(fkuser)
+
+prints
+  id, filename, creator(fkuser)
+
+user
+  id, username, name, passwordhash
+
+settings
+  first_user(fkuser), restricted_users(bool)

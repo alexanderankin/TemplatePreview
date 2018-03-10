@@ -1,0 +1,14 @@
+<div class="site-container">
+  <h1>{{title}}</h1>
+  <p>Welcome to {{title}}</p>
+  {{#if error}}
+    <p style="color: red;">Try again.</p>
+  {{else}}
+    <p>Enter Your Credentials</p>
+  {{/if}}
+  <form action="/login" method="POST">
+    <input type="text" name="username" />
+    <input type="password" name="password" />
+    <input type="submit" />
+  </form>
+</div>
